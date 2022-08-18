@@ -5,7 +5,7 @@ from budget_api.models import Despesa, Receita
 class DespesaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Despesa
-        fields = ['id', 'descricao', 'valor', 'data']
+        exclude = []
 
 
 class ReceitaSerializer(serializers.ModelSerializer):
