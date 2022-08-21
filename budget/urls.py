@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from budget_api.views import DespesaViewSet, ReceitaViewSet, DespesasMesViewList, ReceitasMesViewList
+from budget_api.views import DespesaViewSet, ReceitaViewSet, DespesasMesViewList, ReceitasMesViewList, ResumoMesView
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -26,5 +26,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('despesas/<int:year>/<int:month>/', DespesasMesViewList.as_view(), name='despesas-por-mes'),
-    path('receitas/<int:year>/<int:month>/', ReceitasMesViewList.as_view(), name='receitas-por-mes')
+    path('receitas/<int:year>/<int:month>/', ReceitasMesViewList.as_view(), name='receitas-por-mes'),
+    path('resumo/<int:year>/<int:month>/', ResumoMesView.as_view(), name='resumo-mes'),
 ]
