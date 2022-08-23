@@ -19,8 +19,8 @@ from budget_api.views import DespesaViewSet, ReceitaViewSet, DespesasMesViewList
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register('despesas', DespesaViewSet, basename='DESPESAS')
-router.register('receitas', ReceitaViewSet, basename='RECEITAS')
+router.register('despesas', DespesaViewSet, basename='Despesas')
+router.register('receitas', ReceitaViewSet, basename='Receitas')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
