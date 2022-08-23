@@ -1,6 +1,6 @@
 import datetime
 
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, filters
 from budget_api.models import Despesa, Receita
 from budget_api.serializer import DespesaSerializer, ReceitaSerializer#, ResumoMesSerializer
 from django.db.models import Sum
@@ -11,14 +11,18 @@ class DespesaViewSet(viewsets.ModelViewSet):
     """Exibir todas as despesas"""
     queryset = Despesa.objects.all()
     serializer_class = DespesaSerializer
-    filterset_fields = ['descricao',]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['descricao', ]
+    filter_backends[0].search_param = 'descricao'
 
 
 class ReceitaViewSet(viewsets.ModelViewSet):
     """Exibir todas as receitas"""
     queryset = Receita.objects.all()
     serializer_class = ReceitaSerializer
-    filterset_fields = ['descricao', ]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['descricao', ]
+    filter_backends[0].search_param = 'descricao'
 
 
 class DespesasMesViewList(generics.ListAPIView):
