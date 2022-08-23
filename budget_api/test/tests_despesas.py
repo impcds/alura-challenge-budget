@@ -82,3 +82,21 @@ class DespesaTestCase(APITestCase):
         """Teste que verifica o número de objetos JSON retornados"""
         response = self.client.get(self.list_url)
         self.assertEquals(len(response.data), 2)
+
+    def test_fail_criar_despesa_sem_descricao(self):
+        """Teste que falha ao tentar criar uma despesa sem descrição"""
+        data = {"valor": 100, "data": "2022-08-20", "categoria": "outros"}
+        response = self.client.post(self.list_url, data)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_fail_criar_despesa_sem_valor(self):
+        """Teste que falha ao tentar criar uma despesa sem valor"""
+        data = {"descricao": "Teste sem valor", "data": "2022-08-20", "categoria": "outros"}
+        response = self.client.post(self.list_url, data)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_fail_criar_despesa_com_categoria_invalida(self):
+        """Teste que falha ao tentar criar uma despesa em uma categoria inexistente"""
+        data = {"descricao": "Categoria errada", "valor": 2, "data": "2022-08-20", "categoria": "ops"}
+        response = self.client.post(self.list_url, data)
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
