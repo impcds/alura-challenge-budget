@@ -1,8 +1,9 @@
 from rest_framework.test import APITestCase
-from budget_api.models import Despesa
-from django.urls import reverse
 from rest_framework import status
-
+from django.urls import reverse
+from django.test import TestCase
+from budget_api.models import Despesa
+from budget_api.serializer import DespesaSerializer
 
 class DespesaTestCase(APITestCase):
     def setUp(self):
@@ -100,3 +101,19 @@ class DespesaTestCase(APITestCase):
         data = {"descricao": "Categoria errada", "valor": 2, "data": "2022-08-20", "categoria": "ops"}
         response = self.client.post(self.list_url, data)
         self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class DespesaSerializerTestCase(TestCase):
+    def setUp(self):
+        self.despesa = Despesa(descricao='despesa de teste', valor=25, data='2022-08-20', categoria='lazer')
+        self.serializer = DespesaSerializer(instance=self.despesa)
+
+    def test_que_verifica_os_campos_serializados(self):
+        """Teste para verificar se os campos serializados correspondem aos campos esperados"""
+        data = self.serializer.data
+        self.assertEquals(set(data.keys()), set(['descricao', 'valor', 'data', 'categoria']))
+
+    def test_que_verifica_os_valores_dos_campos_serializados(self):
+        """Teste para verificar se o conteúdo dos campos estão corretos"""
+        data = self.serializer.data
+        self.assertEquals(set(data.values()), set(['despesa de teste', '25.00', '2022-08-20', 'lazer']))
