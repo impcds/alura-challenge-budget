@@ -37,7 +37,7 @@ class DespesaTestCase(APITestCase):
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
 
     def test_despesa_descricao_repetida(self):
-        """Teste para aferir a criação de despesas únicas no mês"""
+        """Teste para aferir a criação de despesa única no mês"""
         data = {
             "descricao": "Despesa de teste",
             "valor": 20.0,

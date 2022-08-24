@@ -42,6 +42,7 @@ class ReceitasMesViewList(generics.ListAPIView):
 
     serializer_class = ReceitaSerializer
 
+
 class ResumoMesView(generics.ListAPIView):
     """Exibir o resumo de um mes do ano"""
     def get(self, request, year, month):
@@ -59,30 +60,25 @@ class ResumoMesView(generics.ListAPIView):
         if not despesas:
             return Response(
                 {
-                    'Receitas': receitas
+                    'Receitas': f'{receitas:.2f}'
                 }
             )
 
         desp_cat = despesas_query.values('categoria').annotate(Sum('valor'))
-        desp_cat = {categoria['categoria']: categoria['valor__sum'] for categoria in desp_cat}
+        desp_cat = {categoria['categoria'].title(): f"{categoria['valor__sum']:.2f}" for categoria in desp_cat}
 
         if not receitas:
-            return Response(
-                {
-                    'Despesas': despesas,
-                    'Categorias': desp_cat
-                }
-            )
+            despesas = {'Despesas': f'{despesas:.2f}'}
+            despesas.update(desp_cat)
+
+            return Response(despesas)
 
         saldo = receitas - despesas
 
-        return Response(
-            {
-                'Total receitas': receitas,
-                'Total despesas': despesas,
-                'Saldo': saldo,
-                'Categorias': desp_cat
-            }
-        )
+        res = {'Total receitas': f'{receitas:.2f}',
+                'Total despesas': f'{despesas:.2f}',
+                'Saldo': f'{saldo:.2f}'}
+        res.update(desp_cat)
 
+        return Response(res)
 
