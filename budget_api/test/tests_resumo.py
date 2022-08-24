@@ -63,12 +63,12 @@ class ResumoMesTestCase(APITestCase):
     def test_verificar_mes_com_apenas_receitas(self):
         """Teste para verificar o retorno de uma requisição GET para um mês com apenas receitas"""
         response = self.client.get('/resumo/2022/9/')
-        self.assertEquals(set(response.data.keys()), set(['Total receitas', 'Saldo']))
+        self.assertEquals(set(response.data.keys()), {'Total receitas', 'Saldo'})
 
     def test_verificar_mes_com_apenas_despesas(self):
         """Teste para verificar o retorno de uma requisição GET para um mês com apenas despesas"""
         response = self.client.get('/resumo/2022/10/')
-        self.assertEquals(set(response.data.keys()), set(['Total despesas', 'Saldo', 'Outros']))
+        self.assertEquals(set(response.data.keys()), {'Total despesas', 'Outros', 'Saldo'})
 
     def test_verificar_mes_sem_lancamentos(self):
         """Teste para verificar o retorno de uma requisição GET para um mês sem lançamentos"""
