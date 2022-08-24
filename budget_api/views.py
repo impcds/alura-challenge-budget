@@ -60,7 +60,8 @@ class ResumoMesView(generics.ListAPIView):
         if not despesas:
             return Response(
                 {
-                    'Receitas': f'{receitas:.2f}'
+                    'Total receitas': f'{receitas:.2f}',
+                    'Saldo': f'{receitas:.2f}'
                 }
             )
 
@@ -68,7 +69,7 @@ class ResumoMesView(generics.ListAPIView):
         desp_cat = {categoria['categoria'].title(): f"{categoria['valor__sum']:.2f}" for categoria in desp_cat}
 
         if not receitas:
-            despesas = {'Despesas': f'{despesas:.2f}'}
+            despesas = {'Total despesas': f'{despesas:.2f}', 'Saldo': f'{-despesas:.2f}'}
             despesas.update(desp_cat)
 
             return Response(despesas)
