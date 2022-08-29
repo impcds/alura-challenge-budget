@@ -2,9 +2,10 @@ import datetime
 
 from rest_framework import viewsets, generics, filters
 from budget_api.models import Despesa, Receita
-from budget_api.serializer import DespesaSerializer, ReceitaSerializer#, ResumoMesSerializer
+from budget_api.serializer import DespesaSerializer, ReceitaSerializer, CriarUsuarioSerializer
 from django.db.models import Sum
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 
 class DespesaViewSet(viewsets.ModelViewSet):
@@ -83,3 +84,7 @@ class ResumoMesView(generics.ListAPIView):
 
         return Response(res)
 
+
+class CriarUsuarioView(generics.CreateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CriarUsuarioSerializer
