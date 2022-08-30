@@ -3,7 +3,7 @@ from budget_api.models import Despesa, Receita
 
 
 class DespesaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'descricao', 'valor', 'data')
+    list_display = ('id', 'descricao', 'valor', 'data', 'usuario')
     search_fields = ('descricao', )
 
 

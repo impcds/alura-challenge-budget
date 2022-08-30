@@ -2,32 +2,42 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from budget_api.models import Despesa, Receita
 from budget_api.serializer import DespesaSerializer
-
+from django.contrib.auth.models import User
+from datetime import date
 
 class ResumoMesTestCase(APITestCase):
     def setUp(self):
+        usuario = User.objects.create_user('pc')
         self.despesa1 = Despesa.objects.create(
+            usuario=usuario,
             descricao='Despesa de teste',
             valor=25.00,
-            data="2022-08-23",
+            # data="2022-08-23",
+            data = date(2022, 8, 23),
             categoria="outros"
         )
         self.despesa2 = Despesa.objects.create(
+            usuario=usuario,
             descricao='Gastei dinheiro',
             valor=50.00,
-            data="2022-08-23",
+            # data="2022-08-23",
+            data=date(2022, 8, 23),
             categoria="lazer"
         )
         self.despesa3 = Despesa.objects.create(
+            usuario=usuario,
             descricao='Gastei mais dinheiro',
             valor=10.00,
-            data="2022-08-23",
+            # data="2022-08-23",
+            data=date(2022, 8, 23),
             categoria="lazer"
         )
         self.despesa4 = Despesa.objects.create(
+            usuario=usuario,
             descricao='Gastei mais dinheiro',
             valor=10.00,
-            data="2022-10-23",
+            # data="2022-10-23",
+            data=date(2022, 10, 23),
             categoria="outros"
         )
         self.receita1 = Receita.objects.create(

@@ -1,11 +1,12 @@
-from rest_framework import serializers
+
+from rest_framework import serializers, generics
 from budget_api.models import Despesa, Receita
 from django.contrib.auth.models import User
 
 class DespesaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Despesa
-        exclude = ['id']
+        fields = ['descricao', 'valor', 'data', 'categoria']
 
 
 class ReceitaSerializer(serializers.ModelSerializer):
@@ -18,6 +19,7 @@ class CriarUsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password', 'first_name', 'last_name', 'email')
+
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},

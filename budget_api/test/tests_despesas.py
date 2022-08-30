@@ -1,23 +1,34 @@
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.urls import reverse
 from django.test import TestCase
+from django.contrib.auth.models import User
 from budget_api.models import Despesa
 from budget_api.serializer import DespesaSerializer
+from datetime import date
+
+
 
 class DespesaTestCase(APITestCase):
     def setUp(self):
+        usuario = User.objects.create_user('pc', password='senha123')
+        self.client.force_authenticate(user=usuario)
         self.list_url = reverse('Despesas-list')
+
         self.despesa1 = Despesa.objects.create(
+            usuario = usuario,
             descricao='Despesa de teste',
             valor=11.00,
-            data="2022-08-23",
+            # data="2022-08-23",
+            data = date(2022, 8, 23),
             categoria="outros"
         )
         self.despesa2 = Despesa.objects.create(
+            usuario = usuario,
             descricao='Gastei dinheiro',
             valor=50.00,
-            data="2022-08-23",
+            # data="2022-08-23",
+            data = date(2022, 8, 23),
             categoria="lazer"
         )
 

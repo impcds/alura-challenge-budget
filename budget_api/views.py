@@ -5,16 +5,25 @@ from budget_api.models import Despesa, Receita
 from budget_api.serializer import DespesaSerializer, ReceitaSerializer, CriarUsuarioSerializer
 from django.db.models import Sum
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authentication import BasicAuthentication
 
 
 class DespesaViewSet(viewsets.ModelViewSet):
     """Exibir todas as despesas"""
-    queryset = Despesa.objects.all()
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = DespesaSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['descricao', ]
     filter_backends[0].search_param = 'descricao'
+
+    def get_queryset(self):
+        queryset = Despesa.objects.filter(usuario=self.request.user)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
 
 
 class ReceitaViewSet(viewsets.ModelViewSet):
