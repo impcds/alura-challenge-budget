@@ -1,5 +1,3 @@
-import datetime
-
 from rest_framework import viewsets, generics, filters
 from budget_api.models import Despesa, Receita
 from budget_api.serializer import DespesaSerializer, ReceitaSerializer, CriarUsuarioSerializer
@@ -28,17 +26,27 @@ class DespesaViewSet(viewsets.ModelViewSet):
 
 class ReceitaViewSet(viewsets.ModelViewSet):
     """Exibir todas as receitas"""
-    queryset = Receita.objects.all()
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = ReceitaSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['descricao', ]
     filter_backends[0].search_param = 'descricao'
 
+    def get_queryset(self):
+        return Receita.objects.filter(usuario=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(usuario=self.request.user)
+
 
 class DespesasMesViewList(generics.ListAPIView):
     """Exibir as despesas de determinado mes de um ano"""
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
-        queryset = Despesa.objects.filter(data__year=self.kwargs['year'], data__month=self.kwargs['month'])
+        queryset = Despesa.objects.filter(data__year=self.kwargs['year'], data__month=self.kwargs['month'], usuario=self.request.user)
         return queryset
 
     serializer_class = DespesaSerializer
@@ -46,8 +54,11 @@ class DespesasMesViewList(generics.ListAPIView):
 
 class ReceitasMesViewList(generics.ListAPIView):
     """Exibir as receitas de um determinado mes do ano"""
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
-        queryset = Receita.objects.filter(data__year=self.kwargs['year'], data__month=self.kwargs['month'])
+        queryset = Receita.objects.filter(data__year=self.kwargs['year'], data__month=self.kwargs['month'], usuario=self.request.user)
         return queryset
 
     serializer_class = ReceitaSerializer
@@ -55,10 +66,13 @@ class ReceitasMesViewList(generics.ListAPIView):
 
 class ResumoMesView(generics.ListAPIView):
     """Exibir o resumo de um mes do ano"""
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, year, month):
-        despesas_query = Despesa.objects.filter(data__year=year, data__month=month)
+        despesas_query = Despesa.objects.filter(data__year=year, data__month=month, usuario=self.request.user)
         despesas = despesas_query.aggregate(Sum('valor'))['valor__sum']
-        receitas = Receita.objects.filter(data__year=year, data__month=month).aggregate(Sum('valor'))['valor__sum']
+        receitas = Receita.objects.filter(data__year=year, data__month=month, usuario=self.request.user).aggregate(Sum('valor'))['valor__sum']
 
         if not receitas and not despesas:
             return Response(

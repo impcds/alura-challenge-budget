@@ -2,21 +2,31 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.models import User
 from budget_api.models import Receita
 from budget_api.serializer import ReceitaSerializer
+from datetime import date
 
 class ReceitaTestCase(APITestCase):
     def setUp(self):
+        usuario = User.objects.create_user('pc', password='senha123')
+        self.client.force_authenticate(user=usuario)
+
         self.list_url = reverse('Receitas-list')
+
         self.receita1 = Receita.objects.create(
+            usuario=usuario,
             descricao='Receita de teste',
             valor=11.00,
-            data="2022-08-23"
+            data=date(2022, 8, 23)
+            # data="2022-08-23"
         )
         self.receita2 = Receita.objects.create(
+            usuario=usuario,
             descricao='Ganhei dinheiro',
             valor=50.00,
-            data="2022-08-23"
+            data=date(2022, 8, 23)
+            # data="2022-08-23"
         )
 
     def test_requisicao_get_listar_receitas(self):

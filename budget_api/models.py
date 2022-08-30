@@ -24,9 +24,8 @@ class Despesa(models.Model):
     categoria = models.CharField(max_length=11, choices=CATEGORIAS, default='outros')
 
     def save(self, *args, **kwargs):
-        query = Despesa.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
-                                       data__year=self.data.year, usuario=self.usuario)
-        if query:
+        if Despesa.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
+                                       data__year=self.data.year, usuario=self.usuario):
             raise serializers.ValidationError("Despesa duplicada no mês!")
         else:
             super().save(*args, **kwargs)
@@ -42,10 +41,9 @@ class Receita(models.Model):
     data = models.DateField(default=date.today)
 
     def save(self, *args, **kwargs):
-        query = Despesa.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
-                                       data__year=self.data.year, usuario=self.usuario)
-        if query:
-            raise serializers.ValidationError("Despesa duplicada no mês!")
+        if Receita.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
+                                       data__year=self.data.year, usuario=self.usuario):
+            raise serializers.ValidationError("Receita duplicada no mês!")
         else:
             super().save(*args, **kwargs)
 

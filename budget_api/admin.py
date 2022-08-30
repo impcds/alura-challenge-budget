@@ -8,7 +8,7 @@ class DespesaAdmin(admin.ModelAdmin):
 
 
 class ReceitaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'descricao', 'valor', 'data')
+    list_display = ('id', 'descricao', 'valor', 'data', 'usuario')
     search_fields = ('descricao', )
 
 

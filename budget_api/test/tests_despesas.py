@@ -1,4 +1,4 @@
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from django.test import TestCase
@@ -13,6 +13,7 @@ class DespesaTestCase(APITestCase):
     def setUp(self):
         usuario = User.objects.create_user('pc', password='senha123')
         self.client.force_authenticate(user=usuario)
+
         self.list_url = reverse('Despesas-list')
 
         self.despesa1 = Despesa.objects.create(

@@ -7,7 +7,10 @@ from datetime import date
 
 class ResumoMesTestCase(APITestCase):
     def setUp(self):
-        usuario = User.objects.create_user('pc')
+        usuario = User.objects.create_user('pc', password='senha123')
+        self.client.force_authenticate(user=usuario)
+
+
         self.despesa1 = Despesa.objects.create(
             usuario=usuario,
             descricao='Despesa de teste',
@@ -41,19 +44,25 @@ class ResumoMesTestCase(APITestCase):
             categoria="outros"
         )
         self.receita1 = Receita.objects.create(
+            usuario=usuario,
             descricao='Receita de teste',
             valor=30.00,
-            data="2022-08-23"
+            data=date(2022, 8, 23)
+            # data="2022-08-23"
         )
         self.receita2 = Receita.objects.create(
+            usuario=usuario,
             descricao='Ganhei dinheiro',
             valor=60.00,
-            data="2022-08-23"
+            data=date(2022, 8, 23)
+            # data="2022-08-23"
         )
         self.receita3 = Receita.objects.create(
+            usuario=usuario,
             descricao='Ganhei dinheiro',
             valor=60.00,
-            data="2022-09-23"
+            data=date(2022, 9, 23)
+            # data="2022-09-23"
         )
 
     def test_requisicao_get_resumo(self):
