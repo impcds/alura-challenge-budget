@@ -1,7 +1,5 @@
-import django.db.utils
 from django.db import models
 from datetime import date
-from django.http import HttpResponse, request, HttpRequest
 from rest_framework import serializers
 
 
@@ -24,8 +22,13 @@ class Despesa(models.Model):
     categoria = models.CharField(max_length=11, choices=CATEGORIAS, default='outros')
 
     def save(self, *args, **kwargs):
-        if Despesa.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
-                                       data__year=self.data.year, usuario=self.usuario):
+        # faz uma busca no BD para ver se existe algum registro com a mesma descricao e data para o usuario
+        # que enviou a requisição
+        query = Despesa.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
+                                       data__year=self.data.year, usuario=self.usuario)
+        # se a busca retornar algo e não existir um id na requisição, siginifca que é uma entrada duplicada
+        # se houver um id, será feito o PUT para edição do registro no DB
+        if query and not self.id:
             raise serializers.ValidationError("Despesa duplicada no mês!")
         else:
             super().save(*args, **kwargs)
@@ -41,8 +44,9 @@ class Receita(models.Model):
     data = models.DateField(default=date.today)
 
     def save(self, *args, **kwargs):
-        if Receita.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
-                                       data__year=self.data.year, usuario=self.usuario):
+        query = Receita.objects.filter(descricao__exact=self.descricao, data__month=self.data.month,
+                                       data__year=self.data.year, usuario=self.usuario)
+        if query and not self.id:
             raise serializers.ValidationError("Receita duplicada no mês!")
         else:
             super().save(*args, **kwargs)

@@ -1,7 +1,7 @@
-
 from rest_framework import serializers, generics
 from budget_api.models import Despesa, Receita
 from django.contrib.auth.models import User
+
 
 class DespesaSerializer(serializers.ModelSerializer):
     class Meta:
